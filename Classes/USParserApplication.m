@@ -134,7 +134,8 @@
 	[panel setCanChooseDirectories:YES];
 	[panel setResolvesAliases:YES];
 	[panel setAllowsMultipleSelection:NO];
-	
+	[panel setCanCreateDirectories:YES];
+    
 	if([panel runModal] == NSOKButton) {
 		NSURL *chosenURL = [[panel URLs] lastObject];
 		NSUserDefaultsController *defaults = [NSUserDefaultsController sharedUserDefaultsController];

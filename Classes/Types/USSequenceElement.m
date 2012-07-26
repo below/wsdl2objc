@@ -78,4 +78,7 @@
 	return @"true";
 }
 
+- (NSString *) description {
+    return [NSString stringWithFormat:@"%@: %@ %@ [%@]", [self className], self.name, self.wsdlName, self.type.typeName];
+}
 @end

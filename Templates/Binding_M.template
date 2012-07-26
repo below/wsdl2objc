@@ -1,3 +1,7 @@
+@interface %«className»Operation ()
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
+@end
+
 @implementation %«className»
 
 @synthesize address;

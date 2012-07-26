@@ -105,7 +105,7 @@
 
 @end
 
-@protocol SSLCredentialsManaging
+@protocol SSLCredentialsManaging <NSObject>
 - (BOOL)canAuthenticateForAuthenticationMethod:(NSString *)authMethod;
 - (BOOL)authenticateForChallenge:(NSURLAuthenticationChallenge *)challenge;
 @end

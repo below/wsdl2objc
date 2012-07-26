@@ -227,7 +227,10 @@
 		USElement *element = [schema elementForName:elementLocalName];
 		
 		if(element.hasBeenParsed) {
-			seqElement.name = element.name;
+            if ([element.name hasPrefix:@"new"] || [element.name hasPrefix:@"copy"]) // For the analyser and correct ARC, we need to change this unfortunately
+                seqElement.name = [@"attribute_" stringByAppendingString:element.name];
+            else
+                seqElement.name = element.name;
 			seqElement.type = element.type;
 			NVLOG(@"REF PARSED SEQELEMENT NAME: %@ (%@)", element.name, [[el parent] name]);
 		} else {
@@ -239,7 +242,13 @@
 	} else {
 		
 		NSString *name = [[[[el attributeForName:@"name"] stringValue] componentsSeparatedByCharactersInSet:kIllegalClassCharactersSet] componentsJoinedByString:@""];
-		seqElement.name = name;
+        if ([name hasPrefix:@"new"] || [name hasPrefix:@"copy"]) // For the analyser and correct ARC, we need to change this unfortunately
+            seqElement.name = [@"attribute_" stringByAppendingString:name];
+        else
+            seqElement.name = name;
+        
+        seqElement.wsdlName = name;
+        
 		NVLOG(@"SEQELEMENT NAME: %@ (%@)", name, [[[el parent] parent] name]);
 		
 		NSString *prefixedType = [[el attributeForName:@"type"] stringValue];

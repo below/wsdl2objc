@@ -30,13 +30,13 @@
 	NSMutableArray *parts;
 	BOOL hasBeenParsed;
 	
-	USSchema *schema;
+	USSchema *__strong schema;
 }
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, retain) NSMutableArray *parts;
+@property (nonatomic, strong) NSMutableArray *parts;
 @property (nonatomic) BOOL hasBeenParsed;
-@property (nonatomic, assign) USSchema *schema;
+@property (nonatomic, strong) USSchema *schema;
 
 - (USPart *)partForName:(NSString *)aName;
 

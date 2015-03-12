@@ -44,12 +44,4 @@
 	return self;
 }
 
-- (void) dealloc
-{
-    [name release];
-    [binding release];
-    [address release];
-    [super dealloc];
-}
-
 @end

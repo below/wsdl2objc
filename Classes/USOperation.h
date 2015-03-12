@@ -33,15 +33,15 @@
 	USOperationInterface *output;
 	NSMutableArray *faults;
 	
-	USPortType *portType;
+	USPortType *__strong portType;
 }
 
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *soapAction;
-@property (nonatomic, retain) USOperationInterface *input;
-@property (nonatomic, retain) USOperationInterface *output;
-@property (nonatomic, retain) NSMutableArray *faults;
-@property (nonatomic, assign) USPortType *portType;
+@property (nonatomic, strong) USOperationInterface *input;
+@property (nonatomic, strong) USOperationInterface *output;
+@property (nonatomic, strong) NSMutableArray *faults;
+@property (nonatomic, strong) USPortType *portType;
 @property (nonatomic, readonly) NSString* className;
 
 - (USOperationFault *)faultForName:(NSString *)aName;

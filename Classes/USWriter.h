@@ -30,7 +30,7 @@
 }
 
 @property (nonatomic, copy) NSURL *outDir;
-@property (nonatomic, retain) USWSDL *wsdl;
+@property (nonatomic, strong) USWSDL *wsdl;
 
 - (id)initWithWSDL:(USWSDL *)aWsdl outputDirectory:(NSURL *)anOutDir;
 

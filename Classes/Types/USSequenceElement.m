@@ -31,13 +31,6 @@
 @synthesize wsdlName;
 @synthesize type;
 
-- (void) dealloc
-{
-    [name release];
-    [wsdlName release];
-    [super dealloc];
-}
-
 - (id)copyWithZone:(NSZone *)zone
 {
 	USSequenceElement *newSeqElement = [USSequenceElement new];
@@ -60,7 +53,6 @@
 		aName = [NSString stringWithFormat:@"%@_", aName];
 	}
 	
-	if(name != nil) [name autorelease];
 	name = [aName copy];
 }
 

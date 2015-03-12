@@ -37,7 +37,7 @@
 
 + (USOperationInterface *)operationInterfaceForOperation:(USOperation *)operation
 {
-	USOperationInterface *interface = [[USOperationInterface new] autorelease];
+	USOperationInterface *interface = [USOperationInterface new];
 	interface.operation = operation;
 	
 	return interface;
@@ -55,13 +55,6 @@
 	return self;
 }
 
-- (void) dealloc
-{
-    [name release];
-    [headers release];
-    [body release];
-    [super dealloc];
-}
 
 - (NSString *)className
 {

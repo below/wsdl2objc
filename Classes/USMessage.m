@@ -44,13 +44,6 @@
 	return self;
 }
 
-- (void) dealloc
-{
-    [name release];
-    [parts release];
-    [super dealloc];
-}
-
 - (USPart *)partForName:(NSString *)aName
 {
 	for(USPart *part in self.parts) {
@@ -63,7 +56,6 @@
 	newPart.message = self;
 	newPart.name = aName;
 	[self.parts addObject:newPart];
-    [newPart release];
 	
 	return newPart;
 }

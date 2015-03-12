@@ -43,14 +43,6 @@
 	return self;
 }
 
-- (void)dealloc
-{
-	[name release];
-	[wsdlName release];
-	[attributeDefault release];
-	[super dealloc];
-}
-
 - (NSDictionary *)templateKeyDictionary
 {
 	NSMutableDictionary *returning = [NSMutableDictionary dictionary];
@@ -76,7 +68,6 @@
 		aName = [NSString stringWithFormat:@"%@_", aName];
 	}
 	
-	if(name != nil) [name autorelease];
 	name = [aName copy];
 }
 

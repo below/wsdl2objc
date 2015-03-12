@@ -29,12 +29,12 @@
 	NSString *name;
 	NSMutableArray *ports;
 	
-	USSchema *schema;
+	USSchema *__strong schema;
 }
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, retain) NSMutableArray *ports;
-@property (nonatomic, assign) USSchema *schema;
+@property (nonatomic, strong) NSMutableArray *ports;
+@property (nonatomic, strong) USSchema *schema;
 @property (nonatomic, readonly) NSString *className;
 
 - (USPort *)portForName:(NSString *)aName;

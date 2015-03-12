@@ -338,7 +338,6 @@
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return first word using default delimiter character set
     int numberOfWords = [self numberOfWordsUsingDelimitersFromSet:delimiterSet];
-    [delimiterSet release];
 	return numberOfWords;
 } // end method
 
@@ -464,7 +463,6 @@
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return first word using default delimiter character set
     NSString *firstWord = [self firstWordUsingDelimitersFromSet:delimiterSet];
-    [delimiterSet release];
 	return firstWord;
 } // end method
 
@@ -544,7 +542,6 @@
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return remaining words after first word using default delimiter character set
     NSString *restOfWords = [self restOfWordsUsingDelimitersFromSet:delimiterSet];
-    [delimiterSet release];
 	return restOfWords;
 } // end method
 
@@ -626,7 +623,6 @@
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return nth word using default delimiter character set
     NSString *wordAtIndex = [self wordAtIndex:anIndex usingDelimitersFromSet:delimiterSet];
-    [delimiterSet release];
 	return wordAtIndex;
 } // end method
 
@@ -744,7 +740,6 @@
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return nth word using default delimiter character set
     NSArray *arrayBySeparatingWords = [self arrayBySeparatingWordsUsingDelimitersFromSet:delimiterSet];
-    [delimiterSet release];
 	return arrayBySeparatingWords;
 } // end method
 

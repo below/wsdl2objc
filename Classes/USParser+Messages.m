@@ -74,7 +74,7 @@
 			NSString *uri = [[el resolveNamespaceForName:typeQName] stringValue];
 			USSchema *elementSchema = [message.schema.wsdl schemaForNamespace:uri];
 			NSString *elementLocalName = [NSXMLNode localNameForName:typeQName];
-			element = [[USElement new] autorelease];
+			element = [USElement new];
 			element.name = name;
 			element.schema = elementSchema;
 			element.type = [elementSchema typeForName:elementLocalName];

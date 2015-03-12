@@ -45,7 +45,7 @@
 	NSMutableArray *portTypes;
 	NSMutableArray *bindings;
 	NSMutableArray *services;
-	USWSDL *wsdl;
+	USWSDL *__strong wsdl;
 	
 	BOOL hasBeenParsed;
 	BOOL hasBeenWritten;
@@ -54,20 +54,19 @@
 @property (nonatomic, copy) NSString *prefix;			// unique global schema prefix (after all includes)
 @property (nonatomic, copy) NSString *localPrefix;		// specified schema prefix within local scope
 @property (nonatomic, copy) NSString *fullName;
-@property (nonatomic, retain) NSMutableArray *types;
-@property (nonatomic, retain) NSMutableArray *elements;
-@property (nonatomic, retain) NSMutableArray *attributes;
-@property (nonatomic, retain) NSMutableArray *imports;
-@property (nonatomic, retain) NSMutableArray *messages;
-@property (nonatomic, retain) NSMutableArray *portTypes;
-@property (nonatomic, retain) NSMutableArray *bindings;
-@property (nonatomic, retain) NSMutableArray *services;
-@property (nonatomic, assign) USWSDL *wsdl;
+@property (nonatomic, strong) NSMutableArray *types;
+@property (nonatomic, strong) NSMutableArray *elements;
+@property (nonatomic, strong) NSMutableArray *attributes;
+@property (nonatomic, strong) NSMutableArray *imports;
+@property (nonatomic, strong) NSMutableArray *messages;
+@property (nonatomic, strong) NSMutableArray *portTypes;
+@property (nonatomic, strong) NSMutableArray *bindings;
+@property (nonatomic, strong) NSMutableArray *services;
+@property (nonatomic, strong) USWSDL *wsdl;
 @property (nonatomic) BOOL hasBeenParsed;
 @property (nonatomic) BOOL hasBeenWritten;
 
 - (id)initWithWSDL:(USWSDL *)aWsdl;
-- (void)dealloc;
 
 - (USType *)typeForName:(NSString *)aName;
 - (USElement *)elementForName:(NSString *)aName;

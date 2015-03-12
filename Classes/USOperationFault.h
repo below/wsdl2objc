@@ -28,11 +28,11 @@
 @interface USOperationFault : NSObject {
 	NSString *name;
 	USMessage *message;
-	USOperation *operation;
+	USOperation *__strong operation;
 }
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, retain) USMessage *message;
-@property (nonatomic, assign) USOperation *operation;
+@property (nonatomic, strong) USMessage *message;
+@property (nonatomic, strong) USOperation *operation;
 
 @end

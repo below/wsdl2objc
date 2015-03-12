@@ -28,8 +28,8 @@
 @interface USElement : NSObject {
 	NSString *name;
 	NSString *wsdlName;
-	USType *type;
-	USSchema *schema;
+	USType *__strong type;
+	USSchema *__strong schema;
 	
 	BOOL hasBeenParsed;
 	
@@ -37,11 +37,11 @@
 }
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, retain) NSString *wsdlName;
-@property (nonatomic, assign) USType *type;
-@property (nonatomic, assign) USSchema *schema;
+@property (nonatomic, strong) NSString *wsdlName;
+@property (nonatomic, strong) USType *type;
+@property (nonatomic, strong) USSchema *schema;
 @property (nonatomic) BOOL hasBeenParsed;
-@property (nonatomic, retain) NSMutableArray *waitingSeqElements;
+@property (nonatomic, strong) NSMutableArray *waitingSeqElements;
 
 - (NSString *)uname;
 

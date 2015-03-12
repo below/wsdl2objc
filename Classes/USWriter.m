@@ -63,13 +63,6 @@
 	return self;
 }
 
-- (void) dealloc
-{
-    [wsdl release];
-    [outDir release];
-    [super dealloc];
-}
-
 - (BOOL)write;
 {
 	if(!wsdl) {
@@ -150,26 +143,23 @@
 	NSMutableString *hString = [NSMutableString string];
 	NSMutableString *mString = [NSMutableString string];
 	
-	NSString *schemaHString = [[NSString stringByExpandingTemplateAtPath:[schema templateFileHPath]
+	NSString *schemaHString = [NSString stringByExpandingTemplateAtPath:[schema templateFileHPath]
 														 usingDictionary:[schema templateKeyDictionary]
 																encoding:NSUTF8StringEncoding
-														  errorsReturned:&errors] retain];
+														  errorsReturned:&errors];
 	if(errors == nil) {
 		[hString appendString:schemaHString];
 	}
 	
-	[schemaHString release];
 	
-	NSString *schemaMString = [[NSString stringByExpandingTemplateAtPath:[schema templateFileMPath]
+	NSString *schemaMString = [NSString stringByExpandingTemplateAtPath:[schema templateFileMPath]
 														 usingDictionary:[schema templateKeyDictionary]
 																encoding:NSUTF8StringEncoding
-														  errorsReturned:&errors] retain];
+														  errorsReturned:&errors];
 	
 	if(errors == nil) {
 		[mString appendString:schemaMString];
 	}
-	
-	[schemaMString release];
 	
 	for(USType *type in schema.types) {
 		[self appendType:type toHString:hString mString:mString];
@@ -219,21 +209,20 @@
 	
 	NSArray *errors;
 	
-	NSString *typeHString = [[NSString stringByExpandingTemplateAtPath:[type templateFileHPath]
+	NSString *typeHString = [NSString stringByExpandingTemplateAtPath:[type templateFileHPath]
 													   usingDictionary:[type templateKeyDictionary]
 															  encoding:NSUTF8StringEncoding
-														errorsReturned:&errors] retain];
+														errorsReturned:&errors];
 	
 	if(errors == nil) {
 		[hString appendString:typeHString];
 	}
 	
-	[typeHString release];
 	
-	NSString *typeMString = [[NSString stringByExpandingTemplateAtPath:[type templateFileMPath]
+	NSString *typeMString = [NSString stringByExpandingTemplateAtPath:[type templateFileMPath]
 													   usingDictionary:[type templateKeyDictionary]
 															  encoding:NSUTF8StringEncoding
-														errorsReturned:&errors] retain];
+														errorsReturned:&errors];
 	
 	if(errors == nil) {
 		[mString appendString:typeMString];
@@ -241,28 +230,26 @@
 		NSLog(@"Errors encountered while generating implementation for type %@", type.typeName);
 	}
 	
-	[typeMString release];	
 }
 
 - (void)appendBinding:(USBinding *)binding toHString:(NSMutableString *)hString mString:(NSMutableString *)mString
 {
 	NSArray *errors;
 	
-	NSString *bindingHString = [[NSString stringByExpandingTemplateAtPath:[binding templateFileHPath]
+	NSString *bindingHString = [NSString stringByExpandingTemplateAtPath:[binding templateFileHPath]
 														  usingDictionary:[binding templateKeyDictionary]
 																 encoding:NSUTF8StringEncoding
-														   errorsReturned:&errors] retain];
+														   errorsReturned:&errors];
 	
 	if(errors == nil) {
 		[hString appendString:bindingHString];
 	}
 	
-	[bindingHString release];
 	
-	NSString *bindingMString = [[NSString stringByExpandingTemplateAtPath:[binding templateFileMPath]
+	NSString *bindingMString = [NSString stringByExpandingTemplateAtPath:[binding templateFileMPath]
 														  usingDictionary:[binding templateKeyDictionary]
 																 encoding:NSUTF8StringEncoding
-														   errorsReturned:&errors] retain];
+														   errorsReturned:&errors];
 	
 	if(errors == nil) {
 		[mString appendString:bindingMString];
@@ -270,28 +257,26 @@
 		NSLog(@"Errors encountered while generating implementation for binding %@", binding.name);
 	}
 	
-	[bindingMString release];
 }
 
 - (void)appendService:(USService *)service toHString:(NSMutableString *)hString mString:(NSMutableString *)mString
 {
 	NSArray *errors;
 	
-	NSString *serviceHString = [[NSString stringByExpandingTemplateAtPath:[service templateFileHPath]
+	NSString *serviceHString = [NSString stringByExpandingTemplateAtPath:[service templateFileHPath]
 														  usingDictionary:[service templateKeyDictionary]
 																 encoding:NSUTF8StringEncoding
-														   errorsReturned:&errors] retain];
+														   errorsReturned:&errors];
 	
 	if(errors == nil) {
 		[hString appendString:serviceHString];
 	}
 	
-	[serviceHString release];
 	
-	NSString *serviceMString = [[NSString stringByExpandingTemplateAtPath:[service templateFileMPath]
+	NSString *serviceMString = [NSString stringByExpandingTemplateAtPath:[service templateFileMPath]
 														  usingDictionary:[service templateKeyDictionary]
 																 encoding:NSUTF8StringEncoding
-														   errorsReturned:&errors] retain];
+														   errorsReturned:&errors];
 	
 	if(errors == nil) {
 		[mString appendString:serviceMString];
@@ -299,7 +284,6 @@
 		NSLog(@"Errors encountered while generating implementation for service %@", service.name);
 	}
 	
-	[serviceMString release];
 }
 
 - (void)copyStandardFilesToOutputDirectory

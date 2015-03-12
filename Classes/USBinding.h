@@ -30,13 +30,13 @@
 	USPortType *portType;
     NSString *soapVersion;
 	
-	USSchema *schema;
+	USSchema *__strong schema;
 }
 
 @property (nonatomic, copy) NSString *name;
-@property (nonatomic, retain) USPortType *portType;
+@property (nonatomic, strong) USPortType *portType;
 @property (nonatomic, copy) NSString *soapVersion;
-@property (nonatomic, assign) USSchema *schema;
+@property (nonatomic, strong) USSchema *schema;
 @property (nonatomic, readonly) NSString *className;
 
 - (NSString *)templateFileHPath;

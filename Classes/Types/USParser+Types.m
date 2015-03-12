@@ -230,7 +230,7 @@
             if ([element.name hasPrefix:@"new"] || [element.name hasPrefix:@"copy"]) // For the analyser and correct ARC, we need to change this unfortunately
                 seqElement.name = [@"attribute_" stringByAppendingString:element.name];
             else
-                seqElement.name = element.name;
+			seqElement.name = element.name;
 			seqElement.type = element.type;
 			NVLOG(@"REF PARSED SEQELEMENT NAME: %@ (%@)", element.name, [[el parent] name]);
 		} else {
@@ -245,7 +245,7 @@
         if ([name hasPrefix:@"new"] || [name hasPrefix:@"copy"]) // For the analyser and correct ARC, we need to change this unfortunately
             seqElement.name = [@"attribute_" stringByAppendingString:name];
         else
-            seqElement.name = name;
+		seqElement.name = name;
         
         seqElement.wsdlName = name;
         

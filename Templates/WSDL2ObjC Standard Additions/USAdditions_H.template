@@ -89,7 +89,7 @@
 @end
 
 @protocol SOAPSignerDelegate
-- (NSData *)signData:(NSData *)rawData;
+- (NSData *)signWSData:(NSData *)rawData;
 - (NSData *)digestData:(NSData *)rawData;
 - (NSString *)base64Encode:(NSData *)rawData;
 @end
@@ -105,7 +105,7 @@
 
 @end
 
-@protocol SSLCredentialsManaging <NSObject>
+@protocol SSLCredentialsManaging
 - (BOOL)canAuthenticateForAuthenticationMethod:(NSString *)authMethod;
 - (BOOL)authenticateForChallenge:(NSURLAuthenticationChallenge *)challenge;
 @end

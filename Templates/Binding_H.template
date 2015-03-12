@@ -65,6 +65,7 @@
 @property (nonatomic, retain) NSURLConnection *urlConnection;
 
 - (id)initWithBinding:(%«className» *)aBinding delegate:(id<%«className»ResponseDelegate>)aDelegate;
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
 
 @end
 

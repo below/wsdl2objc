@@ -337,8 +337,7 @@
 	// set default delimiter character set to punctuation, whitespace, tab and newline chars
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return first word using default delimiter character set
-    int numberOfWords = [self numberOfWordsUsingDelimitersFromSet:delimiterSet];
-	return numberOfWords;
+	return [self numberOfWordsUsingDelimitersFromSet:delimiterSet];
 } // end method
 
 // ---------------------------------------------------------------------------
@@ -462,8 +461,7 @@
 	// set default delimiter character set to punctuation, whitespace, tab and newline chars
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return first word using default delimiter character set
-    NSString *firstWord = [self firstWordUsingDelimitersFromSet:delimiterSet];
-	return firstWord;
+	return [self firstWordUsingDelimitersFromSet:delimiterSet];
 } // end method
 
 // ---------------------------------------------------------------------------
@@ -541,8 +539,7 @@
 	// set default delimiter character set to punctuation, whitespace, tab and newline chars
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return remaining words after first word using default delimiter character set
-    NSString *restOfWords = [self restOfWordsUsingDelimitersFromSet:delimiterSet];
-	return restOfWords;
+	return [self restOfWordsUsingDelimitersFromSet:delimiterSet];
 } // end method
 
 // ---------------------------------------------------------------------------
@@ -622,8 +619,7 @@
 	// set default delimiter character set to punctuation, whitespace, tab and newline chars
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return nth word using default delimiter character set
-    NSString *wordAtIndex = [self wordAtIndex:anIndex usingDelimitersFromSet:delimiterSet];
-	return wordAtIndex;
+	return [self wordAtIndex:anIndex usingDelimitersFromSet:delimiterSet];
 } // end method
 
 // ---------------------------------------------------------------------------
@@ -739,8 +735,7 @@
 	// set default delimiter character set to punctuation, whitespace, tab and newline chars
 	[delimiterSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	// return nth word using default delimiter character set
-    NSArray *arrayBySeparatingWords = [self arrayBySeparatingWordsUsingDelimitersFromSet:delimiterSet];
-	return arrayBySeparatingWords;
+	return [self arrayBySeparatingWordsUsingDelimitersFromSet:delimiterSet];
 } // end method
 
 // ---------------------------------------------------------------------------

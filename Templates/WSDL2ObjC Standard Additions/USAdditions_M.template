@@ -25,22 +25,22 @@
 - (NSString *)stringByEscapingXML
 {
 	NSMutableString *escapedString = [[self mutableCopy] autorelease];
+	[escapedString replaceOccurrencesOfString:@"&" withString:@"&amp;" options:0 range:NSMakeRange(0, [escapedString length])];
 	[escapedString replaceOccurrencesOfString:@"\"" withString:@"&quot;" options:0 range:NSMakeRange(0, [escapedString length])];
 	[escapedString replaceOccurrencesOfString:@"'" withString:@"&apos;" options:0 range:NSMakeRange(0, [escapedString length])];
 	[escapedString replaceOccurrencesOfString:@"<" withString:@"&lt;" options:0 range:NSMakeRange(0, [escapedString length])];
 	[escapedString replaceOccurrencesOfString:@">" withString:@"&gt;" options:0 range:NSMakeRange(0, [escapedString length])];
-	[escapedString replaceOccurrencesOfString:@"&" withString:@"&amp;" options:0 range:NSMakeRange(0, [escapedString length])];
 	return escapedString;
 }
 
 - (NSString *)stringByUnescapingXML
 {
 	NSMutableString *unescapedString = [[self mutableCopy] autorelease];
-	[unescapedString replaceOccurrencesOfString:@"&amp;" withString:@"&" options:0 range:NSMakeRange(0, [unescapedString length])];
 	[unescapedString replaceOccurrencesOfString:@"&quot;" withString:@"\"" options:0 range:NSMakeRange(0, [unescapedString length])];
 	[unescapedString replaceOccurrencesOfString:@"&apos;" withString:@"'" options:0 range:NSMakeRange(0, [unescapedString length])];
 	[unescapedString replaceOccurrencesOfString:@"&lt;" withString:@"<" options:0 range:NSMakeRange(0, [unescapedString length])];
 	[unescapedString replaceOccurrencesOfString:@"&gt;" withString:@">" options:0 range:NSMakeRange(0, [unescapedString length])];
+	[unescapedString replaceOccurrencesOfString:@"&amp;" withString:@"&" options:0 range:NSMakeRange(0, [unescapedString length])];
 	return unescapedString;
 }
 
@@ -634,12 +634,11 @@ xmlXPathObjectPtr execute_xpath_expression(xmlDocPtr doc, const xmlChar* xpathEx
 - (NSString *)signRequest:(NSString *)req
 {
     // TODO: handle errors
-    NSString *serializedForm = nil;
-	
+    
     // convert request back to xmlDoc
     NSData *reqData = [req dataUsingEncoding:NSUTF8StringEncoding];
     xmlDocPtr doc = xmlReadMemory([reqData bytes], 
-                                  [reqData length], 
+                                  (int) [reqData length],  // Cast to (int) to remove 64-bit warning; function is limited to (int)
                                   NULL, 
                                   NULL, 
                                   XML_PARSE_COMPACT | XML_PARSE_NOBLANKS);
@@ -654,7 +653,7 @@ xmlXPathObjectPtr execute_xpath_expression(xmlDocPtr doc, const xmlChar* xpathEx
                            : NULL;
 
     // if not present create it
-    if (!headerPtr && doc) {
+    if (!headerPtr) {
         xmlNsPtr *nss = xmlGetNsList(doc, doc->children);
         xmlNsPtr soap = NULL;
         for(int i = 0; nss && nss[i]; i++) {
@@ -678,63 +677,61 @@ xmlXPathObjectPtr execute_xpath_expression(xmlDocPtr doc, const xmlChar* xpathEx
                                         "| /soap:Envelope/soap:Body//node()/namespace::* "
                                         "| /soap:Envelope/soap:Body//node()/attribute::*",
                                         (const xmlChar *)"soap=http://schemas.xmlsoap.org/soap/envelope/");
-	if (xpathObj && xpathObj->nodesetval) { // TODO: This is crude. Done mainly to pacify the analyzer
+    
+    xmlChar *canonicalized;
+    int size = xmlC14NDocDumpMemory(doc, xpathObj->nodesetval, 1, NULL, 1, &canonicalized);
+    
+    // calculate and add its digest value
+    NSString *digestValue = [delegate base64Encode:[delegate digestData:[NSData dataWithBytes:canonicalized length:size]]];
+    xmlFree(canonicalized);
+    xmlXPathFreeObject(xpathObj);
+    
+    xpathObj = execute_xpath_expression(doc, 
+                                        (const xmlChar *)"/soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignedInfo/ds:Reference/ds:DigestValue",
+                                        (const xmlChar *)"soap=http://schemas.xmlsoap.org/soap/envelope/ "
+                                        "wsse=http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd "
+                                        "ds=http://www.w3.org/2000/09/xmldsig#");
+    
+    xmlNodePtr dvPtr = xpathObj->nodesetval->nodeTab[0];
+    xmlNodeSetContent(dvPtr, [digestValue xmlString]);
+    xmlXPathFreeObject(xpathObj);
+    
+    // sign the SignedInfo
+    xpathObj = execute_xpath_expression(doc, 
+                                        (const xmlChar *)"/soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignedInfo/descendant-or-self::node() "
+                                        "| /soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignedInfo/descendant-or-self::node()/namespace::* "
+                                        "| /soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignedInfo/descendant-or-self::node()/attribute::*",
+                                        (const xmlChar *)"soap=http://schemas.xmlsoap.org/soap/envelope/ "
+                                        "wsse=http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd "
+                                        "ds=http://www.w3.org/2000/09/xmldsig#");
+    
+    size = xmlC14NDocDumpMemory(doc, xpathObj->nodesetval, 1, NULL, 1, &canonicalized);
 
-		xmlChar *canonicalized;
-		int size = xmlC14NDocDumpMemory(doc, xpathObj->nodesetval, 1, NULL, 1, &canonicalized);
-		
-		// calculate and add its digest value
-		NSString *digestValue = [delegate base64Encode:[delegate digestData:[NSData dataWithBytes:canonicalized length:size]]];
-		xmlFree(canonicalized);
-		xmlXPathFreeObject(xpathObj);
-		
-		xpathObj = execute_xpath_expression(doc, 
-											(const xmlChar *)"/soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignedInfo/ds:Reference/ds:DigestValue",
-											(const xmlChar *)"soap=http://schemas.xmlsoap.org/soap/envelope/ "
-											"wsse=http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd "
-											"ds=http://www.w3.org/2000/09/xmldsig#");
-		
-		xmlNodePtr dvPtr = xpathObj->nodesetval->nodeTab[0];
-		xmlNodeSetContent(dvPtr, [digestValue xmlString]);
-		xmlXPathFreeObject(xpathObj);
-		
-		// sign the SignedInfo
-		xpathObj = execute_xpath_expression(doc, 
-											(const xmlChar *)"/soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignedInfo/descendant-or-self::node() "
-											"| /soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignedInfo/descendant-or-self::node()/namespace::* "
-											"| /soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignedInfo/descendant-or-self::node()/attribute::*",
-											(const xmlChar *)"soap=http://schemas.xmlsoap.org/soap/envelope/ "
-											"wsse=http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd "
-											"ds=http://www.w3.org/2000/09/xmldsig#");
-		
-		size = xmlC14NDocDumpMemory(doc, xpathObj->nodesetval, 1, NULL, 1, &canonicalized);
-		
-		NSData *signedData = [delegate signData:[NSData dataWithBytes:canonicalized length:size]];
-		xmlFree(canonicalized);
-		xmlXPathFreeObject(xpathObj);
-		
-		// if the signing fails for any reason return NULL so that the request is not sent at all
-		if (!signedData) {
-			xmlFreeDoc(doc);
-			return nil;
-		}
-		
-		NSString *signatureValue = [delegate base64Encode:signedData];
-		xpathObj = execute_xpath_expression(doc, 
-											(const xmlChar *)"/soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignatureValue",
-											(const xmlChar *)"soap=http://schemas.xmlsoap.org/soap/envelope/ "
-											"wsse=http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd "
-											"ds=http://www.w3.org/2000/09/xmldsig#");
-		
-		xmlNodePtr svPtr = xpathObj->nodesetval->nodeTab[0];
-		xmlNodeSetContent(svPtr, [signatureValue xmlString]);
-		xmlXPathFreeObject(xpathObj);    
-		
-		xmlC14NDocDumpMemory(doc, NULL, 1, NULL, 1, &canonicalized);
-		serializedForm = [NSString stringWithCString:(const char*)canonicalized encoding:NSUTF8StringEncoding];
-		
-		xmlFree(canonicalized);
-	}
+    NSData *signedData = [delegate signWSData:[NSData dataWithBytes:canonicalized length:size]];
+    xmlFree(canonicalized);
+    xmlXPathFreeObject(xpathObj);
+    
+    // if the signing fails for any reason return NULL so that the request is not sent at all
+    if (!signedData) {
+        xmlFreeDoc(doc);
+        return nil;
+    }
+    
+    NSString *signatureValue = [delegate base64Encode:signedData];
+    xpathObj = execute_xpath_expression(doc, 
+                                        (const xmlChar *)"/soap:Envelope/soap:Header/wsse:Security/ds:Signature/ds:SignatureValue",
+                                        (const xmlChar *)"soap=http://schemas.xmlsoap.org/soap/envelope/ "
+                                        "wsse=http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd "
+                                        "ds=http://www.w3.org/2000/09/xmldsig#");
+    
+    xmlNodePtr svPtr = xpathObj->nodesetval->nodeTab[0];
+    xmlNodeSetContent(svPtr, [signatureValue xmlString]);
+    xmlXPathFreeObject(xpathObj);    
+    
+    xmlC14NDocDumpMemory(doc, NULL, 1, NULL, 1, &canonicalized);
+    NSString *serializedForm = [NSString stringWithCString:(const char*)canonicalized encoding:NSUTF8StringEncoding];
+    
+    xmlFree(canonicalized);
     xmlFreeDoc(doc);
     
     return serializedForm;

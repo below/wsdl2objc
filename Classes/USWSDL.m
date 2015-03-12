@@ -107,7 +107,8 @@
 	[xsd addSimpleClassWithName:@"time" representationClass:@"NSDate *"];
 	[xsd addSimpleClassWithName:@"duration" representationClass:@"NSDate *"];
 	[xsd addSimpleClassWithName:@"base64Binary" representationClass:@"NSData *"];
-	[xsd addSimpleClassWithName:@"decimal" representationClass:@"NSDecimalNumber *"];
+    // don't use NSDecimalNumber class - too many issues
+	[xsd addSimpleClassWithName:@"decimal" representationClass:@"NSNumber *"];
 	[xsd addSimpleClassWithName:@"QName" representationClass:@"NSString *"];
 	[xsd addSimpleClassWithName:@"anyURI" representationClass:@"NSString *"];
 	[xsd addSimpleClassWithName:@"string" representationClass:@"NSString *"];

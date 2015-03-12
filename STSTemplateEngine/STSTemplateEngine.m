@@ -116,9 +116,8 @@ BOOL classExists (NSString *className) {
 
 - (BOOL)isRegularFileAtPath:(NSString *)path
 {
-    path = [path stringByResolvingSymlinksInPath];
-    NSDictionary * attributes = [self attributesOfItemAtPath:path error:nil];
-    return ([[attributes valueForKey:NSFileType] isEqual:NSFileTypeRegular]);
+	return ([[[self attributesOfItemAtPath:path error:nil] fileType]
+		isEqualToString:@"NSFileTypeRegular"]);
 } // end method
 @end // private category
 

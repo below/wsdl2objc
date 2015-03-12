@@ -120,10 +120,11 @@
 	[panel setAllowsMultipleSelection:NO];
 	[panel setAllowedFileTypes:[NSArray arrayWithObject:@"wsdl"]];
     
-	if([panel runModal] == NSOKButton) {
-		NSURL *chosenURL = [[panel URLs] lastObject];
+    if ([panel runModal] == NSOKButton) {
+        NSURL * url = [[panel URLs] lastObject];
+		NSString *chosenPath = [url absoluteString];
 		NSUserDefaultsController *defaults = [NSUserDefaultsController sharedUserDefaultsController];
-		[defaults setValue:[chosenURL path] forKeyPath:@"values.wsdlPath"];
+		[defaults setValue:chosenPath forKeyPath:@"values.wsdlPath"];
 	}
 }
 
@@ -135,11 +136,12 @@
 	[panel setResolvesAliases:YES];
 	[panel setAllowsMultipleSelection:NO];
 	[panel setCanCreateDirectories:YES];
-    
+	
 	if([panel runModal] == NSOKButton) {
-		NSURL *chosenURL = [[panel URLs] lastObject];
+        NSURL * url = [[panel URLs] lastObject];
+		NSString *chosenPath = [url absoluteString];
 		NSUserDefaultsController *defaults = [NSUserDefaultsController sharedUserDefaultsController];
-		[defaults setValue:[chosenURL path] forKeyPath:@"values.outPath"];
+		[defaults setValue:chosenPath forKeyPath:@"values.outPath"];
 	}
 }
 

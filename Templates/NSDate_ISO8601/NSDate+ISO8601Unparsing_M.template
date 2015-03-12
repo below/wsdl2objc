@@ -13,7 +13,7 @@
 #endif
 unichar ISO8601UnparserDefaultTimeSeparatorCharacter = DEFAULT_TIME_SEPARATOR;
 
-static BOOL is_leap_year(unsigned year) {
+static BOOL is_leap_year(NSUInteger year) {
   return \
   ((year %   4U) == 0U)
   && (((year % 100U) != 0U)
@@ -36,7 +36,12 @@ static BOOL is_leap_year(unsigned year) {
   NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
   [formatter setDateFormat: dateFormat];
   [formatter setTimeZone:[NSTimeZone timeZoneWithName:@"UTC"]];
-  
+
+   // BUG: Set to US locale so that "AM" or "PM" doesn't automatically get appended
+   // see http://stackoverflow.com/questions/143075/nsdateformatter-am-i-doing-something-wrong-or-is-this-a-bug
+   // and http://developer.apple.com/library/ios/#qa/qa1480/_index.html
+  formatter.locale = [[[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"] autorelease];
+
   NSString *str = [formatter stringForObjectValue:self];
   [formatter release];
   if(includeTime) {
@@ -64,22 +69,22 @@ static BOOL is_leap_year(unsigned year) {
   NSCalendar *gregorian = [[NSCalendar alloc]
                            initWithCalendarIdentifier:NSGregorianCalendar];
   NSDateComponents *dateComps = [gregorian components: NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit fromDate: self];
-  unsigned year = [dateComps year];
-  unsigned week = 0U;
-  unsigned dayOfWeek = ([dateComps weekday] + 6U) % 7U;
-  unsigned dayOfYear = [gregorian ordinalityOfUnit: NSDayCalendarUnit inUnit: NSYearCalendarUnit forDate: self];
+  NSInteger year = [dateComps year];
+  NSUInteger week = 0U;
+  NSInteger dayOfWeek = ([dateComps weekday] + 6U) % 7U;
+  NSUInteger dayOfYear = [gregorian ordinalityOfUnit: NSDayCalendarUnit inUnit: NSYearCalendarUnit forDate: self];
   
-  unsigned prevYear = year - 1U;
+  NSInteger prevYear = year - 1U;
   
   BOOL yearIsLeapYear = is_leap_year(year);
   BOOL prevYearIsLeapYear = is_leap_year(prevYear);
   
-  unsigned YY = prevYear % 100U;
-  unsigned C = prevYear - YY;
-  unsigned G = YY + YY / 4U;
-  unsigned Jan1Weekday = (((((C / 100U) % 4U) * 5U) + G) % 7U);
+  NSUInteger YY = prevYear % 100U;
+  NSUInteger C = prevYear - YY;
+  NSUInteger G = YY + YY / 4U;
+  NSUInteger Jan1Weekday = (((((C / 100U) % 4U) * 5U) + G) % 7U);
   
-  unsigned weekday = ((dayOfYear + Jan1Weekday) - 1U) % 7U;
+  NSUInteger weekday = ((dayOfYear + Jan1Weekday) - 1U) % 7U;
   
   [gregorian release];
   
@@ -92,7 +97,7 @@ static BOOL is_leap_year(unsigned year) {
       ++year;
       week = 1U;
     } else {
-      unsigned J = dayOfYear + (sunday - weekday) + Jan1Weekday;
+      NSUInteger J = dayOfYear + (sunday - weekday) + Jan1Weekday;
       week = J / 7U - (Jan1Weekday > thursday);
     }
   }
@@ -106,14 +111,14 @@ static BOOL is_leap_year(unsigned year) {
   } else
     timeString = @"";
   
-  return [NSString stringWithFormat:@"%u-W%02u-%02u%@", year, week, dayOfWeek + 1U, timeString];
+  return [NSString stringWithFormat:@"%u-W%02u-%02u%@", (unsigned int) year, (unsigned int) week, (unsigned int) dayOfWeek + 1U, timeString];
 }
 - (NSString *)ISO8601OrdinalDateStringWithTime:(BOOL)includeTime timeSeparator:(unichar)timeSep {
   NSCalendar *gregorian = [[NSCalendar alloc]
                            initWithCalendarIdentifier:NSGregorianCalendar];
   NSDateComponents *dateComps = [gregorian components: NSYearCalendarUnit fromDate: self];
-  unsigned year = [dateComps year];
-  unsigned dayOfYear = [gregorian ordinalityOfUnit: NSDayCalendarUnit inUnit: NSYearCalendarUnit forDate: self];
+  NSInteger year = [dateComps year];
+  NSUInteger dayOfYear = [gregorian ordinalityOfUnit: NSDayCalendarUnit inUnit: NSYearCalendarUnit forDate: self];
   NSString *timeString;
 
   [gregorian release];
@@ -126,7 +131,7 @@ static BOOL is_leap_year(unsigned year) {
   } else
     timeString = @"";
   
-  return [NSString stringWithFormat:@"%u-%03u%@", year, dayOfYear, timeString];
+  return [NSString stringWithFormat:@"%u-%03u%@", (unsigned int) year, (unsigned int) dayOfYear, timeString];
 }
 
 #pragma mark -

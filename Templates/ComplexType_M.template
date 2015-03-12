@@ -91,6 +91,12 @@ _content = nil;
 	xmlNodePtr root = xmlDocGetRootElement(doc);
 	xmlNsPtr xsi = xmlSearchNs(doc, root, (const xmlChar*)"xsi");
 	xmlSetNsProp(node, xsi, (const xmlChar*)"type", (const xmlChar*)"%«schema.prefix»:%«typeName»");
+
+	// BUGBUG: ASP.NET compatibility: need to add xmlns attribute or else parameters don't make it.  Is there a good
+	// place to do this so that we don't have to redo this whenever we autogenerate new code?
+	xmlNsPtr xmlns = xmlSearchNs(doc, root, (const xmlChar*)"xmlns");
+	xmlSetNsProp(node, xmlns, (const xmlChar*)"xmlns", (const xmlChar*)"http://myflightbook.com/");	
+	
 %ENDIF
 	
 	[self addAttributesToNode:node];
@@ -476,7 +482,7 @@ _content = nil;
  // An assumption here is that these objects will be subclasses of NSObject
  
 - (id) initWithCoder:(NSCoder *)decoder {
-	self = [super init];
+		self = [super init];
 	if (self == nil) { return nil; }
  
 	NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
@@ -485,9 +491,9 @@ _content = nil;
 	for(int i = 0; i < numIvars; i++) {
 		Ivar thisIvar = ivars[i];
 		NSString * key = [NSString stringWithUTF8String:ivar_getName(thisIvar)];
-		id value_ = [decoder decodeObjectForKey:key];
-		if (value_ == nil) { value_ = [NSNumber numberWithFloat:0.0]; }
-		[self setValue:value_ forKey:key];
+		id value = [decoder decodeObjectForKey:key];
+		if (value == nil) { value = [NSNumber numberWithFloat:0.0]; }
+		[self setValue:value forKey:key];
 	}
 	if (numIvars > 0) { free(ivars); }
 	[pool drain];
@@ -504,8 +510,8 @@ _content = nil;
 	for (int i = 0; i < numIvars; i++) {
 		Ivar thisIvar = ivars[i];
 		NSString * key = [NSString stringWithUTF8String:ivar_getName(thisIvar)];
-		id value_ = [self valueForKey:key];
-		[encoder encodeObject:value_ forKey:key];
+		id value = [self valueForKey:key];
+		[encoder encodeObject:value forKey:key];
 	}
 	if (numIvars > 0) { free(ivars); }
 	[pool drain];

@@ -129,7 +129,8 @@
 	[request setValue:@"wsdl2objc" forHTTPHeaderField:@"User-Agent"];
 	[request setValue:soapAction forHTTPHeaderField:@"SOAPAction"];
 	[request setValue:[[self MIMEType] stringByAppendingString:@"; charset=utf-8"] forHTTPHeaderField:@"Content-Type"];
-	[request setValue:[NSString stringWithFormat:@"%u", [bodyData length]] forHTTPHeaderField:@"Content-Length"];
+	// ERICBE: cast to unsigned long to prevent warnings about implicit cast of NSInteger
+	[request setValue:[NSString stringWithFormat:@"%lu", (unsigned long) [bodyData length]] forHTTPHeaderField:@"Content-Length"];
 	[request setValue:self.address.host forHTTPHeaderField:@"Host"];
 	for (NSString *eachHeaderField in [self.customHeaders allKeys]) {
 		[request setValue:[self.customHeaders objectForKey:eachHeaderField] forHTTPHeaderField:eachHeaderField];
@@ -152,7 +153,9 @@
 - (void) dealloc
 {
 	[soapSigner release];
-	[sslManager release];
+	// ERICBE: Assign sslManager property to nil to release it - avoids a compiler warning.
+	// [sslManager release];
+	self.sslManager = nil;
 	[address release];
 	[cookies release];
 	[customHeaders release];
@@ -430,7 +433,8 @@
 	// Not yet defined in 10.5 libxml
 	#define XML_PARSE_COMPACT 0
 #endif
-	doc = xmlReadMemory([responseData bytes], [responseData length], NULL, NULL, XML_PARSE_COMPACT | XML_PARSE_NOBLANKS);
+    // EricBe: Put explicit conversion since [responseData length] is NSInteger but xmlReadMemory wants int.
+	doc = xmlReadMemory([responseData bytes], (int) [responseData length], NULL, NULL, XML_PARSE_COMPACT | XML_PARSE_NOBLANKS);
 		
 		if (doc == NULL) {
 			NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Errors while parsing returned XML" forKey:NSLocalizedDescriptionKey];

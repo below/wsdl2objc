@@ -493,7 +493,7 @@ _content = nil;
 		NSString * key = [NSString stringWithUTF8String:ivar_getName(thisIvar)];
 		id decodedValue = [decoder decodeObjectForKey:key];
 		if (decodedValue == nil) { decodedValue = [NSNumber numberWithFloat:0.0]; }
-		[self decodedValue forKey:key];
+		[self setValue:decodedValue forKey:key];
 	}
 	if (numIvars > 0) { free(ivars); }
 	[pool drain];

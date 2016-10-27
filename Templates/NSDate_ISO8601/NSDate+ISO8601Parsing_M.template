@@ -171,9 +171,9 @@ static BOOL is_leap_year(NSUInteger year) {
   if (str == nil)
     return nil;
   NSCalendar *gregorian = [[NSCalendar alloc]
-                           initWithCalendarIdentifier:NSGregorianCalendar];
+                           initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
   NSDate *now = [NSDate date];
-  NSDateComponents *dateComps = [gregorian components: NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate: now];
+  NSDateComponents *dateComps = [gregorian components: NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay fromDate: now];
   NSUInteger
   //Date
   year,

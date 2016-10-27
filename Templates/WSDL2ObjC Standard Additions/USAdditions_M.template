@@ -270,7 +270,7 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
 			bytes[length++] = (buffer[2] << 6) | buffer[3];
 	}
 	
-	realloc(bytes, length);
+	bytes = realloc(bytes, length);
 	return [NSData dataWithBytesNoCopy:bytes length:length];
 }
 
@@ -491,6 +491,8 @@ static const char encodingTable[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopq
     return self;
 }
 
+int register_namespaces(xmlXPathContextPtr xpathCtx, const xmlChar* nsList);
+
 int register_namespaces(xmlXPathContextPtr xpathCtx, const xmlChar* nsList) {
     xmlChar* nsListDup;
     xmlChar* prefix;
@@ -538,6 +540,8 @@ int register_namespaces(xmlXPathContextPtr xpathCtx, const xmlChar* nsList) {
     xmlFree(nsListDup);
     return 0;
 }
+
+xmlXPathObjectPtr execute_xpath_expression(xmlDocPtr doc, const xmlChar* xpathExpr, const xmlChar* nsList);
 
 xmlXPathObjectPtr execute_xpath_expression(xmlDocPtr doc, const xmlChar* xpathExpr, const xmlChar* nsList) {
     xmlXPathContextPtr xpathCtx; 

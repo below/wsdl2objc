@@ -43,7 +43,9 @@
 		[defaults addObserver:self forKeyPath:@"values.outPath" options:0 context:nil];
 		
 		statusString = nil;
-		
+        
+        NSBundle * bundle = [NSBundle mainBundle];
+        self.versionString = [bundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 		parsing = NO;
 	}
 	

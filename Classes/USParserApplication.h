@@ -53,6 +53,7 @@
 
 @property (nonatomic, readonly) NSURL *wsdlURL;
 @property (nonatomic, readonly) NSURL *outURL;
+@property (nonatomic, copy) NSString *versionString;
 #ifdef APPKIT_EXTERN
 @property (nonatomic, copy) NSString *statusString;
 @property (nonatomic) BOOL parsing;

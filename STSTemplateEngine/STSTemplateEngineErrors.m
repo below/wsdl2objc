@@ -62,7 +62,7 @@ const NSRange kZeroRange = { 0, 0 };
 // initialised with nil and it may be set using method setLiteral:
 
 + (TEError *)error:(enum TEErrorCode)code
-			inLine:(unsigned)line 
+			inLine:(NSUInteger)line
 		   atToken:(enum TEToken)token
 {
 	TEError *thisInstance = [[TEError alloc] init];
@@ -291,7 +291,7 @@ const NSRange kZeroRange = { 0, 0 };
 // Returns the line number in which the error described by the receiver
 // ocurred. The line number may be 0 in the event of file access errors.
 
-- (unsigned)lineNumber
+- (NSUInteger)lineNumber
 {
 	return self->lineNumber;
 } // end method
@@ -684,14 +684,14 @@ const NSRange kZeroRange = { 0, 0 };
 		}
 		else {
 			// when line number is relevant
-			return [NSString stringWithFormat:@"%@ encountered %@ in line %u \n%@\n%@",
-				prefix, severity, self->lineNumber, description, remedy];
+            return [NSString stringWithFormat:@"%@ encountered %@ in line %lu \n%@\n%@",
+                    prefix, severity, (unsigned long)self->lineNumber, description, remedy];
 		} // end if
 	}
 	// compose and return clear text message for message with template name
 	else {
-		return [NSString stringWithFormat:@"%@ encountered %@ in template %@:%u \n%@\n%@",
-			prefix, severity, nameOrPath, self->lineNumber, description, remedy];
+        return [NSString stringWithFormat:@"%@ encountered %@ in template %@:%lu \n%@\n%@",
+                prefix, severity, nameOrPath, (unsigned long)self->lineNumber, description, remedy];
 	} // end if
 } // end method
 

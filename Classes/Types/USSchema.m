@@ -265,7 +265,7 @@
 	
 	[returning setObject:self.fullName forKey:@"fullName"];
 	[returning setObject:self.prefix forKey:@"prefix"];
-	[returning setObject:[[NSNumber numberWithUnsignedInt:[self.types count]] stringValue] forKey:@"typeCount"];
+	[returning setObject:[[NSNumber numberWithUnsignedInteger:[self.types count]] stringValue] forKey:@"typeCount"];
 	[returning setObject:self.imports forKey:@"imports"];
 	[returning setObject:self.types forKey:@"types"];
 	[returning setObject:self.wsdl forKey:@"wsdl"];

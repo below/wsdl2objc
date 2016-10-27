@@ -67,7 +67,7 @@
 //
 // Returns the number of objects on the receiver's stack.
 
-- (unsigned)count;
+- (NSUInteger)count;
 {
 	return [self->_stack count];
 } // end method

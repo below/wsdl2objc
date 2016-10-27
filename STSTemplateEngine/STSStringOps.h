@@ -121,7 +121,7 @@
 // Returns the number of words in the receiver, using the character sets
 // punctuationCharacterSet and whitespaceCharacterSet as word delimiters.
 
-- (int)numberOfWords;
+- (NSUInteger)numberOfWords;
 
 // ---------------------------------------------------------------------------
 //	Instance Method:  numberOfWordsUsingDelimitersFromString:
@@ -130,7 +130,7 @@
 // Returns the number of words in the receiver, using a character set made
 // from the characters in delimiters as word delimiters.
 
-- (int)numberOfWordsUsingDelimitersFromString:(NSString *)delimiters;
+- (NSUInteger)numberOfWordsUsingDelimitersFromString:(NSString *)delimiters;
 
 // ---------------------------------------------------------------------------
 //	Instance Method:  numberOfWordsUsingDelimitersFromSet:
@@ -139,7 +139,7 @@
 // Returns the number of words in the receiver, using the character set
 // delimiterSet as word delimiters.
 
-- (int)numberOfWordsUsingDelimitersFromSet:(NSCharacterSet *)delimiterSet;
+- (NSUInteger)numberOfWordsUsingDelimitersFromSet:(NSCharacterSet *)delimiterSet;
 
 // ---------------------------------------------------------------------------
 //	Instance Method:  firstWord

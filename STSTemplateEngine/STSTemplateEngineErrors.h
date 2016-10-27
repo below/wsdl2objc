@@ -142,7 +142,7 @@ enum TERemedy {
 	@private
 		enum TEErrorCode errorCode;		// error code
 		enum TESeverity severityCode;	// severity of the error
-		unsigned lineNumber;		// line number in which the error ocurred
+		NSUInteger lineNumber;		// line number in which the error ocurred
 		NSRange range;				// range in the line pinpointing the error
 		enum TEToken token;			// offending token which caused the error
 		enum TERemedy remedyCode;	// remedy taken for error recovery
@@ -162,7 +162,7 @@ enum TERemedy {
 // initialised with nil and it may be set using method setLiteral:
 
 + (TEError *)error:(enum TEErrorCode)code
-			inLine:(unsigned)line 
+			inLine:(NSUInteger)line
 		   atToken:(enum TEToken)token;
 
 // ---------------------------------------------------------------------------
@@ -200,7 +200,7 @@ enum TERemedy {
 // Returns the line number in which the error described by the receiver
 // ocurred. The line number may be 0 in the event of file access errors.
 
-- (unsigned)lineNumber;
+- (NSUInteger)lineNumber;
 
 // ---------------------------------------------------------------------------
 // Instance Method:  token

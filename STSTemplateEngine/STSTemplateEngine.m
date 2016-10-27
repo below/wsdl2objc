@@ -183,7 +183,7 @@ BOOL classExists (NSString *className) {
 											  andEndTag:(NSString *)endTag
 										usingDictionary:(NSDictionary *)dictionary
 										 errorsReturned:(NSArray **)errorLog
-											 lineNumber:(unsigned)lineNumber;
+											 lineNumber:(NSUInteger)lineNumber;
 @end
 
 @implementation NSString (STSTemplateEnginePrivateCategory2);
@@ -264,7 +264,7 @@ BOOL classExists (NSString *className) {
 											  andEndTag:(NSString *)endTag
 										usingDictionary:(NSDictionary *)dictionary
 										 errorsReturned:(NSArray **)errorLog
-											 lineNumber:(unsigned)lineNumber
+											 lineNumber:(NSUInteger)lineNumber
 {	
 	NSMutableString *remainder_ = [NSMutableString stringWithCapacity:[self length]];
 	NSMutableString *result = [NSMutableString stringWithCapacity:[self length]];
@@ -643,7 +643,7 @@ BOOL classExists (NSString *className) {
 	// Temporary string variables and line counter
 	NSString *line = nil, *remainder_ = nil, *keyword = nil, *key = nil, *value = nil, *operand = nil, *varName = nil;
 	NSMutableString *innerString = nil;
-	unsigned len, lineNumber = 0, unexpandIf = 0, unexpandFor = 0;
+	NSUInteger len, lineNumber = 0, unexpandIf = 0, unexpandFor = 0;
 	
 	// -----------------------------------------------------------------------
 	//  P r e c o n d i t i o n s   c h e c k

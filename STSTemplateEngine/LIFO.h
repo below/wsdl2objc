@@ -64,7 +64,7 @@
 //
 // Returns the number of objects on the receiver's stack.
 
-- (unsigned)count;
+- (NSUInteger)count;
 
 // ---------------------------------------------------------------------------
 // Instance Method:  pushObject:

@@ -330,7 +330,7 @@
 // Invokes numberOfWordsUsingDelimitersFromSet: with a union of character sets
 // punctuationCharacterSet and whitespaceAndNewlineCharacterSet.
 
-- (int)numberOfWords
+- (NSUInteger)numberOfWords
 {
 	NSMutableCharacterSet *delimiterSet = [[NSCharacterSet punctuationCharacterSet] mutableCopy];
 	
@@ -347,7 +347,7 @@
 // Invokes numberOfWordsUsingDelimitersFromSet: with a character set made from
 // characters in string delimiters.
 
-- (int)numberOfWordsUsingDelimitersFromString:(NSString *)delimiters
+- (NSUInteger)numberOfWordsUsingDelimitersFromString:(NSString *)delimiters
 {
 	NSCharacterSet *delimiterSet = [NSCharacterSet characterSetWithCharactersInString:delimiters];
 	// return first word using given delimiters
@@ -371,10 +371,10 @@
 // error-condtions:
 //  if the receiver is nil, nil is returned
 
-- (int)numberOfWordsUsingDelimitersFromSet:(NSCharacterSet *)delimiterSet;
+- (NSUInteger)numberOfWordsUsingDelimitersFromSet:(NSCharacterSet *)delimiterSet;
 {
 	NSRange delimiter, range;
-	unsigned len, wordCount = 0;
+	NSUInteger len, wordCount = 0;
 
 	// first check pre-conditions
 	if (self == nil) {
@@ -776,7 +776,7 @@
 {
 	NSMutableArray *result = [NSMutableArray arrayWithCapacity:([self length] / AVG_WORD_LENGTH)];
 	NSRange delimiter, word, range;
-	unsigned len;
+	NSUInteger len;
 	
 	// first check pre-conditions
 	if (self == nil) {
@@ -880,7 +880,7 @@
 	NSCharacterSet *EOLmarkerSet = [NSCharacterSet characterSetWithCharactersInString:kEOLmarkers];
 	NSRange EOLmarker, line, range;
 	int previousMarkerWasCR;
-	unsigned len;
+	NSUInteger len;
 	
 	// first check pre-conditions
 	if (self == nil) {

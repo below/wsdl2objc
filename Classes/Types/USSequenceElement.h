@@ -21,7 +21,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "UStype.h"
+#import "USType.h"
 
 @interface USSequenceElement : NSObject <NSCopying> {
 	NSInteger minOccurs;

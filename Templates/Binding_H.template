@@ -55,17 +55,18 @@
 	%«className»Response *response;
 	id<%«className»ResponseDelegate> delegate;
 	NSMutableData *responseData;
-	NSURLConnection *urlConnection;
 }
 
 @property (nonatomic, retain) %«className» *binding;
 @property (nonatomic, readonly) %«className»Response *response;
 @property (nonatomic, assign) id<%«className»ResponseDelegate> delegate;
 @property (nonatomic, retain) NSMutableData *responseData;
-@property (nonatomic, retain) NSURLConnection *urlConnection;
 
 - (id)initWithBinding:(%«className» *)aBinding delegate:(id<%«className»ResponseDelegate>)aDelegate;
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
+- (void)didFailWithError:(NSError *)error;
+- (void)didReceiveResponse:(NSURLResponse *)urlResponse;
+- (void)didReceiveData:(NSData *)data;
+- (void)connectionDidFinishLoading;
 
 @end
 

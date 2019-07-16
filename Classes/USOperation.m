@@ -110,4 +110,9 @@
 	return [self invokeStringWithAsync:YES];
 }
 
+- (NSString *)hasFaults
+{
+    return self.faults.count > 0 ? @"true" : @"false";
+}
+
 @end

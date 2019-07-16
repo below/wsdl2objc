@@ -48,4 +48,5 @@
 
 - (NSString *)invokeString;
 - (NSString *)asyncInvokeString;
+- (NSString *)hasFaults;
 @end

@@ -158,7 +158,7 @@ _content = nil;
 	
 %IFDEF sequenceElements
 %FOREACH element in sequenceElements
-	if(self.%«element.name» != 0) {
+	if(((void *)self.%«element.name») != 0) {
 %IFEQ element.type.assignOrRetain retain
 
 %IF element.useAnArray

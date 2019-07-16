@@ -1,7 +1,3 @@
-@interface %«className»Operation ()
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error;
-@end
-
 @implementation %«className»
 
 @synthesize address;
@@ -114,7 +110,7 @@
                                             code:0
                                         userInfo:nil];
         
-        [operation connection:nil didFailWithError:err];
+        [operation didFailWithError:err];
         return;
     }
 
@@ -144,10 +140,21 @@
 		NSLog(@"OutputBody:\n%@", outputBody);
 	}
 	
-	NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:operation];
-	
-	operation.urlConnection = connection;
-	[connection release];
+	NSURLSession *session = [NSURLSession sharedSession];
+	dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+	[[session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+		if (error != nil)
+			[operation didFailWithError:error];
+		if (response != nil)
+			[operation didReceiveResponse:response];
+		if (data != nil)
+			[operation didReceiveData:data];
+
+		dispatch_semaphore_signal(semaphore);
+	}] resume];
+
+	dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+	[operation connectionDidFinishLoading];
 }
 
 - (void) dealloc
@@ -170,8 +177,6 @@
 @synthesize response;
 @synthesize delegate;
 @synthesize responseData;
-@synthesize urlConnection;
-
 - (id)initWithBinding:(%«className» *)aBinding delegate:(id<%«className»ResponseDelegate>)aDelegate
 {
 	if ((self = [super init])) {
@@ -179,10 +184,13 @@
 		response = nil;
 		self.delegate = aDelegate;
 		self.responseData = nil;
-		self.urlConnection = nil;
 	}
 	
 	return self;
+}
+
+- (void) connectionDidFinishLoading {
+// subclassed
 }
 
 - (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
@@ -196,7 +204,7 @@
 	}
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)urlResponse
+- (void)didReceiveResponse:(NSURLResponse *)urlResponse
 {
 	NSHTTPURLResponse *httpResponse;
 
@@ -217,7 +225,6 @@
 
 		if ((self.binding.ignoreEmptyResponse == NO) || (contentLength != 0)) {
 			NSError *error = nil;
-			[connection cancel];
 			if ([httpResponse statusCode] >= 400) {
 				NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:[NSHTTPURLResponse localizedStringForStatusCode:[httpResponse statusCode]],NSLocalizedDescriptionKey,
 																			  httpResponse.URL, NSURLErrorKey,nil];
@@ -229,14 +236,14 @@
 				error = [NSError errorWithDomain:@"%«className»ResponseHTTP" code:1 userInfo:userInfo];
 			}
 				
-			[self connection:connection didFailWithError:error];
+			[self didFailWithError:error];
 		} else {
             [delegate operation:self completedWithResponse:response];
 		}
 	}
 }
 
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+- (void)didReceiveData:(NSData *)data
 {
 	if (responseData == nil) {
 		responseData = [data mutableCopy];
@@ -245,7 +252,7 @@
 	}
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+- (void)didFailWithError:(NSError *)error
 {
 	if (binding.logXMLInOut) {
 		NSLog(@"ResponseError:\n%@", error);
@@ -260,7 +267,6 @@
 	[response release];
 	delegate = nil;
 	[responseData release];
-	[urlConnection release];
 	
 	[super dealloc];
 }
@@ -418,7 +424,7 @@
 	[binding sendHTTPCallUsingBody:operationXMLString soapAction:@"%«operation.soapAction»" forOperation:self];
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+- (void)connectionDidFinishLoading
 {
 	if (responseData != nil && delegate != nil)
 	{
@@ -483,11 +489,15 @@
 %ENDFOR
 								if ((bodyNode->ns != nil && xmlStrEqual(bodyNode->ns->prefix, cur->ns->prefix)) && 
 									xmlStrEqual(bodyNode->name, (const xmlChar *) "Fault")) {
+%IF operation.hasFaults
                                     NSDictionary *exceptions = [NSDictionary dictionaryWithObjectsAndKeys:
 %FOREACH fault in operation.faults
                                                                 @"%«schema.prefix»_%«fault.name»", @"%«fault.name»",
 %ENDFOR
                                                                 nil];
+%ELSE
+									NSDictionary *exceptions = [NSDictionary dictionary];
+%ENDIF
 									SOAPFault *bodyObject = [SOAPFault deserializeNode:bodyNode expectedExceptions:exceptions];
 									//NSAssert1(bodyObject != nil, @"Errors while parsing body %s", bodyNode->name);
 									if (bodyObject != nil) [responseBodyParts addObject:bodyObject];

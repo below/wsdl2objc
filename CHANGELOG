@@ -1,3 +1,7 @@
+April 2017 (pick a version number):
+ - Added to github
+ - fixed deprecated code
+ 
 Branch 0.5i (6/24/2009):
  - Branch for iPhone.  To be merged back into the trunk once it has been verified as working with MacOS.
  - Now produces code that compiles correctly on the iPhone.

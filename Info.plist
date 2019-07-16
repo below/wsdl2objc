@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleShortVersionString</key>
-	<string>0.7</string>
+	<string>0.9</string>
 	<key>CFBundleGetInfoString</key>
 	<string>Copyright (c) 2008-2010 LightSPEED Technologies, Inc.</string>
 	<key>CFBundleVersion</key>
